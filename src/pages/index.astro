@@ -1,5 +1,6 @@
 ---
-
+import "reveal.js/dist/reveal.css";
+import "reveal.js/dist/theme/night.css";
 ---
 
 <html lang="en">
@@ -8,9 +9,24 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+
 		<title>Astro</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h3>Building</h3>
+					<h2>Disclosure Risk Calculator</h2>
+					<h4>A Case Study in R and TypeScript Integration</h4>
+				</section>
+			</div>
+		</div>
 	</body>
 </html>
+
+<script>
+	import Reveal from "reveal.js";
+	let deck = new Reveal({})
+	deck.initialize();
+</script>
