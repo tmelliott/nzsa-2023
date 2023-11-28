@@ -1,6 +1,8 @@
 ---
 import "reveal.js/dist/reveal.css";
-import "reveal.js/dist/theme/night.css";
+import "reveal.js/plugin/highlight/monokai.css";
+// import "reveal.js/plugin/highlight/highlight.css";
+import "../base.css"
 ---
 
 <html lang="en">
@@ -12,21 +14,396 @@ import "reveal.js/dist/theme/night.css";
 
 		<title>Astro</title>
 	</head>
-	<body>
+	<body class="from-black to-gray-800 !bg-gradient-to-tr">
+		<img src="/disrisk.png" class="invert h-16 fixed top-10 left-10" />
 		<div class="reveal">
 			<div class="slides">
-				<section>
-					<h3>Building</h3>
-					<h2>Disclosure Risk Calculator</h2>
-					<h4>A Case Study in R and TypeScript Integration</h4>
+				<section class="flex flex-col">
+					<h3 class="!text-blue-200">Building</h3>
+					<h2 class="!text-blue-500">Disclosure Risk Calculator</h2>
+					<h4 class="f!text-blue-200 flex gap-3 items-center justify-center">A Case Study in <img src="/r.png" class="h-8" /> and <img src="/ts.png" class="h-8" /> Integration</h4>
+					<h5 class="flex flex-col !mt-12 text-3xl">
+						<span class="!text-blue-50">Tom Elliott</span>
+						<span class="!text-red-500">NZSA 2023, Christchurch</span>
+					</h5>
+					<div class="flex gap-12 justify-center">
+						<img src="/trr.png" class="invert h-16" />
+						<img src="/ial.png" class="h-16" />
+					</div>
 				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Disclosure Risk Calculator</h3>
+
+					<ul>
+						<li>Extends Roberts & Milne (2019), MSc thesis</li>
+						<li>Simple calculation - JavaScript</li>
+						<li>sdcMicro R package for extra details</li>
+					</ul>
+				</section>
+
+				<section data-background-iframe="https://risk.terourou.org" data-preload>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">App requirements</h3>
+
+					<ol>
+						<li>Easy to access (no install, coding)</li>
+						<li>Data privacy guaranteed
+							<ol class="!list-[lower-alpha]">
+								<li>(original) data does not leave user's PC</li>
+								<li class="fragment highlight-blue">Capabilities for extra R-powered analysis</li>
+							</ol>
+						</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Infrastructure</h3>
+
+					<div class="flex justify-center items-start gap-36">
+						<div class="flex flex-col flex-1 items-center">
+							<img src="/nextjs.png" class="h-24 invert" />
+							<ul>
+								<li>ReactJS</li>
+								<li>TypeScript</li>
+								<li>rserve-js</li>
+							</ul>
+						</div>
+						<div class="flex flex-col flex-1 items-center">
+							<img src="/r.png" class="h-24" />
+							<ul>
+								<li>sdcMicro</li>
+								<li>Not type safe</li>
+								<li>Rserve</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<!-- <h3 class="!text-blue-500">Infrastructure</h3> -->
+
+					<div class="flex justify-center">
+						<pre class="mermaid w-full scale-150">
+							%%&#123; init: &#123; 'flowchart': &#123; 'curve': 'basis' &#125;&#125;&#125;%%
+							graph LR
+							subgraph Rserve[Rserve Server]
+								R
+							end
+							subgraph App[NextJS App]
+								rserve-js
+							end
+							rserve-js -.->|Connect| Rserve
+							R &lt;-->|WebSocket| rserve-js
+						</pre>
+					</div>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">I: R functions</h3>
+
+					<ul>
+						<li><code>upload_data(data)</code>
+							<ul>
+								<li>Delabelled version of data</li>
+								<li>Uploaded <strong>once</strong></li>
+							</ul>
+						</li>
+						<li><code>calculate_risks(conf)</code>
+							<ul>
+								<li>Additional variable + row risks (sdcMicro)</li>
+								<li>Uses data in local environment (RAM, not disk)</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="|2,13|4-11|2,5|7-10">
+						upload_data &lt;- function(x) &#123;
+							user_data &lt;- doRead(x)
+
+							calculate_risks &lt;- function(conf) &#123;
+								x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
+								# etc ...
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">II: Rserve</h3>
+
+					<ul>
+						<li>Server: Rserve binary package</li>
+						<li>Client: rserve-js Javascript library
+							<ul>
+								<li>Kinda outdated</li>
+								<li>Old packaging style</li>
+								<li>Callbacks instead of modern Promises</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">react-rserve (prototype)</h3>
+
+					<ul>
+						<li>Wrapper around rserve-js</li>
+						<li><code>npm -i @tmelliott/react-rserve</code></li>
+						<li>Uses React Context for initial R connection</li>
+						<li>Not typed (yet!)</li>
+					</ul>
+				</section>
+
+				<section>
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="|1|3-9|6,11-14|5,7,12">
+						import &#123; Rserve, useRserve &#125; from "@tmelliott/react-rserve";
+
+						const App = () =&gt; &#123;
+							return (
+								&lt;Rserve &#123;...&#123; host: "http://localhost" &#125;&#125;&gt;
+									&lt;MyComponent /&gt;
+								&lt;/Rserve&gt;
+							)
+						&#125;
+
+						const MyComponent = () =&gt; &#123;
+							const &#123; R &#125; = useRserve();
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">III: Uploading data</h3>
+
+					<ul>
+						<li>Connected to R</li>
+						<li>User's data in browser</li>
+						<li>How to call <code>upload_data()</code> from app?</li>
+					</ul>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="">
+						const MyComponent = () =&gt; &#123;
+							const &#123; R &#125; = useRserve();
+							if (!R) return &lt;&gt;Loading ...&lt;/&gt;;
+
+							R.ocap((err, funs) =&gt; &#123;
+								if (err) return;
+								if (!funs.upload_data) return;
+
+								console.log(funs.upload_data);
+							&#125;);
+							console.log("Ready!")
+
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="|3|3,13|3,10|3,14">
+						const MyComponent = () =&gt; &#123;
+							const &#123; R &#125; = useRserve();
+							const &#123; uploadData, setUploadData &#125; = useState();
+							if (!R) return &lt;&gt;Loading ...&lt;/&gt;;
+
+							R.ocap((err, funs) =&gt; &#123;
+								if (err) return;
+								if (!funs.upload_data) return;
+
+								setUploadData(funs.upload_data);
+							&#125;);
+
+							if (!uploadData) return &lt;&gt;Loading ...&lt;/&gt;;
+							return &lt;Button onClick=&#123;uploadData&#125;&gt;Upload data&lt;/Button&gt;;
+						&#125;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">IV: Types</h3>
+
+					<ul>
+						<li>NextJS app uses TypeScript</li>
+						<li>R is not type safe</li>
+						<li>Need to write type definitions</li>
+					</ul>
+				</section>
+
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="">
+						const MyComponent = () =&gt; &#123;
+							const &#123; uploadData, setUploadData &#125; =
+								useState();
+
+							R.ocap((err, funs) =&gt; &#123;
+								if (err) return;
+								if (!funs.upload_data) return;
+
+								setUploadData(funs.upload_data);
+							&#125;);
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="|3,5,9">
+						const MyComponent = () =&gt; &#123;
+							const &#123; uploadData, setUploadData &#125; =
+								useState&lt;UploadData&gt;();
+
+							R.ocap((err: string | null, funs: Funs) =&gt; &#123;
+								if (err) return;
+								if (!funs.upload_data) return;
+
+								setUploadData(funs.upload_data);
+							&#125;);
+						&#125;;
+					</code></pre>
+				</section>
+
+				<section>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="|2|5-11|5,11|6-10|6|7-10">
+						type Funs = &#123;
+							upload_data?: UploadData,
+						&#125;;
+
+						type UploadData = (
+							rows: Row[] | undefined,
+							callback: (
+								err: string | undefined,
+								value: DisRiskFuns | undefined,
+							) =&gt; void,
+						) =&gt; void;
+					</code></pre>
+				</section>
+
+				<section>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						export type DisRiskFuns = &#123;
+							calculate_risks?: (
+								args: &#123; sfrac: number; vars: string[] },
+								callback: (err: any, value: DisRiskResult) => void,
+							) => void;
+						};
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
+						calculate_risks &lt;- function(conf) &#123;
+							x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
+							# etc ...
+							list(
+								var_contrib = list(...),
+								indiv_risk = c(...)
+							)
+						&#125;
+					</code></pre>
+				</section>
+
+
+				<section>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						export type DisRiskResult = &#123;
+							var_contrib: &#123; v: string; c: number }[];
+							indiv_risk: number[];
+						};
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="4-7">
+						calculate_risks &lt;- function(conf) &#123;
+							x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
+							# etc ...
+							list(
+								var_contrib = list(...),
+								indiv_risk = c(...)
+							)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Data lifecycle</h3>
+
+					<ul>
+						<li>Rserve creates a WebSocket connection</li>
+						<li>Each user has unique R process on server</li>
+						<li>Delabelled data uploaded to R environment</li>
+						<li>When WS closes, R session killed - data released</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Why?</h3>
+
+					<ul>
+						<li>Data scientist writes complex R functions</li>
+						<li>Web developer writes ReactJS application</li>
+						<li>Types ensure runtime consistency</li>
+						<li>Improved development experience (autocomplete, errors, etc)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Where next?</h3>
+
+					<ul>
+						<li>Automating callbacks to Promises</li>
+						<li>Typesafe R functions, automated type definitions</li>
+						<li>General purpose packages/tools for data-driven web apps (blog post, visualizer, ...)</li>
+						<li>Alternative to Shiny</li>
+					</ul>
+				</section>
+
+				<section class="flex flex-col">
+					<h2 class="!text-blue-500">Thank You</h2>
+					<h4 class="f!text-blue-200 flex gap-3 items-center justify-center">Building Disclosure Risk Calculator: A Case Study in R and TypeScript Integration</h4>
+					<h5 class="flex flex-col !mt-12 text-3xl">
+						<span class="!text-blue-50">Tom Elliott</span>
+						<span class="!text-red-500">NZSA 2023, Christchurch</span>
+					</h5>
+					<div class="flex gap-12 justify-center">
+						<img src="/trr.png" class="invert h-16" />
+						<img src="/ial.png" class="h-16" />
+					</div>
+				</section>
+
+
 			</div>
 		</div>
+
 	</body>
 </html>
 
 <script>
 	import Reveal from "reveal.js";
-	let deck = new Reveal({})
-	deck.initialize();
+	// @ts-ignore
+	import RevealHighlight from "reveal.js/plugin/highlight/highlight.esm.js";
+
+	let deck = new Reveal({
+		history: true,
+		controls: true,
+		transition: "none",
+	})
+	deck.initialize({
+		plugins: [RevealHighlight],
+	});
+
+	import mermaid from "mermaid";
+	mermaid.initialize({ startOnLoad: true,
+		theme: 'dark',
+	 });
 </script>
