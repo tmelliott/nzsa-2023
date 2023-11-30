@@ -42,25 +42,21 @@ import "../base.css"
 					</ul>
 				</section>
 
-				<section data-background-iframe="https://risk.terourou.org" data-preload>
-				</section>
-
 				<section>
 					<h3 class="!text-blue-500">App requirements</h3>
 
 					<ol>
 						<li>Easy to access (no install, coding)</li>
 						<li>Data privacy guaranteed
-							<ol class="!list-[lower-alpha]">
-								<li>(original) data does not leave user's PC</li>
-								<li class="fragment highlight-blue">Capabilities for extra R-powered analysis</li>
-							</ol>
-						</li>
+						<li class="">Capabilities for extra R-powered analysis</li>
 					</ol>
 				</section>
 
+				<section data-background-iframe="https://risk.terourou.org" data-preload>
+				</section>
+
 				<section>
-					<h3 class="!text-blue-500">Infrastructure</h3>
+					<h3 class="!text-blue-500">Architecture</h3>
 
 					<div class="flex justify-center items-start gap-36">
 						<div class="flex flex-col flex-1 items-center">
@@ -68,7 +64,6 @@ import "../base.css"
 							<ul>
 								<li>ReactJS</li>
 								<li>TypeScript</li>
-								<li>rserve-js</li>
 							</ul>
 						</div>
 						<div class="flex flex-col flex-1 items-center">
@@ -76,93 +71,25 @@ import "../base.css"
 							<ul>
 								<li>sdcMicro</li>
 								<li>Not type safe</li>
-								<li>Rserve</li>
 							</ul>
 						</div>
 					</div>
-				</section>
+					<div class="mt-8 flex flex-col justify-center items-center">
+						Rserve
 
-				<section>
-					<!-- <h3 class="!text-blue-500">Infrastructure</h3> -->
-
-					<div class="flex justify-center">
-						<pre class="mermaid w-full scale-150">
-							%%&#123; init: &#123; 'flowchart': &#123; 'curve': 'basis' &#125;&#125;&#125;%%
-							graph LR
-							subgraph Rserve[Rserve Server]
-								R
-							end
-							subgraph App[NextJS App]
-								rserve-js
-							end
-							rserve-js -.->|Connect| Rserve
-							R &lt;-->|WebSocket| rserve-js
-						</pre>
+						<ul>
+							<li>Server: Rserve binary package</li>
+							<li>Client: rserve-js Javascript library</li>
+						</ul>
 					</div>
 				</section>
 
 				<section>
-					<h3 class="!text-blue-500">I: R functions</h3>
+					<h3 class="!text-blue-500">Architecture</h3>
 
-					<ul>
-						<li><code>upload_data(data)</code>
-							<ul>
-								<li>Delabelled version of data</li>
-								<li>Uploaded <strong>once</strong></li>
-							</ul>
-						</li>
-						<li><code>calculate_risks(conf)</code>
-							<ul>
-								<li>Additional variable + row risks (sdcMicro)</li>
-								<li>Uses data in local environment (RAM, not disk)</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-
-				<section>
-					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="|2,13|4-11|2,5|7-10">
-						upload_data &lt;- function(x) &#123;
-							user_data &lt;- doRead(x)
-
-							calculate_risks &lt;- function(conf) &#123;
-								x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
-								# etc ...
-								list(
-									var_contrib = list(...),
-									indiv_risk = c(...)
-								)
-							&#125;
-
-							list(calculate_risks = calculate_risks)
-						&#125;
-					</code></pre>
-				</section>
-
-				<section>
-					<h3 class="!text-blue-500">II: Rserve</h3>
-
-					<ul>
-						<li>Server: Rserve binary package</li>
-						<li>Client: rserve-js Javascript library
-							<ul>
-								<li>Kinda outdated</li>
-								<li>Old packaging style</li>
-								<li>Callbacks instead of modern Promises</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-
-				<section>
-					<h3 class="!text-blue-500">react-rserve (prototype)</h3>
-
-					<ul>
-						<li>Wrapper around rserve-js</li>
-						<li><code>npm -i @tmelliott/react-rserve</code></li>
-						<li>Uses React Context for initial R connection</li>
-						<li>Not typed (yet!)</li>
-					</ul>
+					<div class="flex justify-center">
+						<svg aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="-8 -8 571.7166748046875 188.32501220703125" style="max-width: 571.7166748046875px;" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" id="mermaid-1701305302821"><style>#mermaid-1701305302821{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#ccc;}#mermaid-1701305302821 .error-icon{fill:#a44141;}#mermaid-1701305302821 .error-text{fill:#ddd;stroke:#ddd;}#mermaid-1701305302821 .edge-thickness-normal{stroke-width:2px;}#mermaid-1701305302821 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1701305302821 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1701305302821 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1701305302821 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1701305302821 .marker{fill:lightgrey;stroke:lightgrey;}#mermaid-1701305302821 .marker.cross{stroke:lightgrey;}#mermaid-1701305302821 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1701305302821 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#ccc;}#mermaid-1701305302821 .cluster-label text{fill:#F9FFFE;}#mermaid-1701305302821 .cluster-label span,#mermaid-1701305302821 p{color:#F9FFFE;}#mermaid-1701305302821 .label text,#mermaid-1701305302821 span,#mermaid-1701305302821 p{fill:#ccc;color:#ccc;}#mermaid-1701305302821 .node rect,#mermaid-1701305302821 .node circle,#mermaid-1701305302821 .node ellipse,#mermaid-1701305302821 .node polygon,#mermaid-1701305302821 .node path{fill:#1f2020;stroke:#81B1DB;stroke-width:1px;}#mermaid-1701305302821 .flowchart-label text{text-anchor:middle;}#mermaid-1701305302821 .node .label{text-align:center;}#mermaid-1701305302821 .node.clickable{cursor:pointer;}#mermaid-1701305302821 .arrowheadPath{fill:lightgrey;}#mermaid-1701305302821 .edgePath .path{stroke:lightgrey;stroke-width:2.0px;}#mermaid-1701305302821 .flowchart-link{stroke:lightgrey;fill:none;}#mermaid-1701305302821 .edgeLabel{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-1701305302821 .edgeLabel rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-1701305302821 .labelBkg{background-color:rgba(87.75, 87.75, 87.75, 0.5);}#mermaid-1701305302821 .cluster rect{fill:hsl(180, 1.5873015873%, 28.3529411765%);stroke:rgba(255, 255, 255, 0.25);stroke-width:1px;}#mermaid-1701305302821 .cluster text{fill:#F9FFFE;}#mermaid-1701305302821 .cluster span,#mermaid-1701305302821 p{color:#F9FFFE;}#mermaid-1701305302821 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(20, 1.5873015873%, 12.3529411765%);border:1px solid rgba(255, 255, 255, 0.25);border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1701305302821 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#ccc;}#mermaid-1701305302821 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker orient="auto" markerHeight="12" markerWidth="12" markerUnits="userSpaceOnUse" refY="5" refX="6" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-pointEnd"><path style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker><marker orient="auto" markerHeight="12" markerWidth="12" markerUnits="userSpaceOnUse" refY="5" refX="4.5" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-pointStart"><path style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 0 5 L 10 10 L 10 0 z"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="11" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-circleEnd"><circle style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="-1" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-circleStart"><circle style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="12" viewBox="0 0 11 11" class="marker cross flowchart" id="mermaid-1701305302821_flowchart-crossEnd"><path style="stroke-width: 2px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="-1" viewBox="0 0 11 11" class="marker cross flowchart" id="mermaid-1701305302821_flowchart-crossStart"><path style="stroke-width: 2px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><g class="root"><g class="clusters"><g id="App" class="cluster default flowchart-label"><rect height="172.32501220703125" width="188.68333435058594" y="0" x="0" ry="0" rx="0" style=""></rect><g transform="translate(3.8416671752929688, 0)" class="cluster-label"><foreignObject height="53.2166748046875" width="181"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">NextJS App</span></div></foreignObject></g></g><g id="Rserve" class="cluster default flowchart-label"><rect height="172.32501220703125" width="217.0500030517578" y="0" x="338.6666717529297" ry="0" rx="0" style=""></rect><g transform="translate(338.6666717529297, 0)" class="cluster-label"><foreignObject height="53.2166748046875" width="217.0500030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">Rserve Server</span></div></foreignObject></g></g></g><g class="edgePaths"><path marker-end="url(#mermaid-1701305302821_flowchart-pointEnd)" marker-start="url(#mermaid-1701305302821_flowchart-pointStart)" style="fill:none;" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-R LE-rserve-js" id="L-R-rserve-js-0" d="M423.97,110.421L420.484,113.312C416.997,116.204,410.023,121.987,388.673,124.879C367.322,127.771,331.594,127.771,295.867,127.771C260.139,127.771,224.411,127.771,203.204,126.474C181.997,125.176,175.311,122.582,171.968,121.284L168.624,119.987"></path><path marker-end="url(#mermaid-1701305302821_flowchart-pointEnd)" style="fill:none;stroke-width:2px;stroke-dasharray:3;" class="edge-thickness-normal edge-pattern-dotted flowchart-link LS-rserve-js LE-Rserve" id="L-rserve-js-Rserve-0" d="M163.683,64.255L167.85,62.638C172.017,61.022,180.35,57.788,202.381,56.171C224.411,54.554,260.139,54.554,284.253,54.554C308.367,54.554,320.867,54.554,327.117,54.554L333.367,54.554"></path></g><g class="edgeLabels"><g transform="translate(295.8666687011719, 127.77084350585938)" class="edgeLabel"><g transform="translate(-82.18333435058594, -26.60833740234375)" class="label"><foreignObject height="53.2166748046875" width="164.36666870117188"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">WebSocket</span></div></foreignObject></g></g><g transform="translate(250.2669, 54.55417)" class="edgeLabel"><g transform="translate(-60.07500457763672, -26.60833740234375)" class="label"><foreignObject height="53.2166748046875" width="120.15000915527344"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">Connect</span></div></foreignObject></g></g></g><g class="nodes"><g transform="translate(94.34166717529297, 91.16250610351562)" id="flowchart-rserve-js-1" class="node default flowchart-label"><rect height="68.2166748046875" width="138.68333435058594" y="-34.10833740234375" x="-69.34166717529297" ry="0" rx="0" style="" class="basic label-container"></rect><g transform="translate(-61.84166717529297, -26.60833740234375)" style="" class="label"><rect></rect><foreignObject height="53.2166748046875" width="123.68333435058594"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">rserve-js</span></div></foreignObject></g></g><g transform="translate(447.1916732788086, 91.16250610351562)" id="flowchart-R-0" class="node default default flowchart-label"><rect height="68.2166748046875" width="38.28334045410156" y="-34.10833740234375" x="-19.14167022705078" ry="0" rx="0" style="" class="basic label-container"></rect><g transform="translate(-11.641670227050781, -26.60833740234375)" style="" class="label"><rect></rect><foreignObject height="53.2166748046875" width="23.283340454101562"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">R</span></div></foreignObject></g></g></g></g></g></svg>
+					</div>
 				</section>
 
 				<section>
@@ -185,7 +112,292 @@ import "../base.css"
 				</section>
 
 				<section>
-					<h3 class="!text-blue-500">III: Uploading data</h3>
+					<div class="flex justify-center">
+						<svg aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="-8 -8 571.7166748046875 188.32501220703125" style="max-width: 571.7166748046875px;" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" id="mermaid-1701305302821"><style>#mermaid-1701305302821{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#ccc;}#mermaid-1701305302821 .error-icon{fill:#a44141;}#mermaid-1701305302821 .error-text{fill:#ddd;stroke:#ddd;}#mermaid-1701305302821 .edge-thickness-normal{stroke-width:2px;}#mermaid-1701305302821 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1701305302821 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1701305302821 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1701305302821 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1701305302821 .marker{fill:lightgrey;stroke:lightgrey;}#mermaid-1701305302821 .marker.cross{stroke:lightgrey;}#mermaid-1701305302821 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1701305302821 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#ccc;}#mermaid-1701305302821 .cluster-label text{fill:#F9FFFE;}#mermaid-1701305302821 .cluster-label span,#mermaid-1701305302821 p{color:#F9FFFE;}#mermaid-1701305302821 .label text,#mermaid-1701305302821 span,#mermaid-1701305302821 p{fill:#ccc;color:#ccc;}#mermaid-1701305302821 .node rect,#mermaid-1701305302821 .node circle,#mermaid-1701305302821 .node ellipse,#mermaid-1701305302821 .node polygon,#mermaid-1701305302821 .node path{fill:#1f2020;stroke:#81B1DB;stroke-width:1px;}#mermaid-1701305302821 .flowchart-label text{text-anchor:middle;}#mermaid-1701305302821 .node .label{text-align:center;}#mermaid-1701305302821 .node.clickable{cursor:pointer;}#mermaid-1701305302821 .arrowheadPath{fill:lightgrey;}#mermaid-1701305302821 .edgePath .path{stroke:lightgrey;stroke-width:2.0px;}#mermaid-1701305302821 .flowchart-link{stroke:lightgrey;fill:none;}#mermaid-1701305302821 .edgeLabel{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-1701305302821 .edgeLabel rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-1701305302821 .labelBkg{background-color:rgba(87.75, 87.75, 87.75, 0.5);}#mermaid-1701305302821 .cluster rect{fill:hsl(180, 1.5873015873%, 28.3529411765%);stroke:rgba(255, 255, 255, 0.25);stroke-width:1px;}#mermaid-1701305302821 .cluster text{fill:#F9FFFE;}#mermaid-1701305302821 .cluster span,#mermaid-1701305302821 p{color:#F9FFFE;}#mermaid-1701305302821 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(20, 1.5873015873%, 12.3529411765%);border:1px solid rgba(255, 255, 255, 0.25);border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1701305302821 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#ccc;}#mermaid-1701305302821 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker orient="auto" markerHeight="12" markerWidth="12" markerUnits="userSpaceOnUse" refY="5" refX="6" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-pointEnd"><path style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker><marker orient="auto" markerHeight="12" markerWidth="12" markerUnits="userSpaceOnUse" refY="5" refX="4.5" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-pointStart"><path style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 0 5 L 10 10 L 10 0 z"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="11" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-circleEnd"><circle style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="-1" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-1701305302821_flowchart-circleStart"><circle style="stroke-width: 1px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="12" viewBox="0 0 11 11" class="marker cross flowchart" id="mermaid-1701305302821_flowchart-crossEnd"><path style="stroke-width: 2px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="-1" viewBox="0 0 11 11" class="marker cross flowchart" id="mermaid-1701305302821_flowchart-crossStart"><path style="stroke-width: 2px; stroke-dasharray: 1px, 0px;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><g class="root"><g class="clusters"><g id="App" class="cluster default flowchart-label"><rect height="172.32501220703125" width="188.68333435058594" y="0" x="0" ry="0" rx="0" style=""></rect><g transform="translate(3.8416671752929688, 0)" class="cluster-label"><foreignObject height="53.2166748046875" width="181"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">NextJS App</span></div></foreignObject></g></g><g id="Rserve" class="cluster default flowchart-label"><rect height="172.32501220703125" width="217.0500030517578" y="0" x="338.6666717529297" ry="0" rx="0" style=""></rect><g transform="translate(338.6666717529297, 0)" class="cluster-label"><foreignObject height="53.2166748046875" width="217.0500030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">Rserve Server</span></div></foreignObject></g></g></g><g class="edgePaths"><path marker-end="url(#mermaid-1701305302821_flowchart-pointEnd)" marker-start="url(#mermaid-1701305302821_flowchart-pointStart)" style="fill:none;" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-R LE-rserve-js" id="L-R-rserve-js-0" d="M423.97,110.421L420.484,113.312C416.997,116.204,410.023,121.987,388.673,124.879C367.322,127.771,331.594,127.771,295.867,127.771C260.139,127.771,224.411,127.771,203.204,126.474C181.997,125.176,175.311,122.582,171.968,121.284L168.624,119.987"></path><path marker-end="url(#mermaid-1701305302821_flowchart-pointEnd)" style="fill:none;stroke-width:2px;stroke-dasharray:3;" class="edge-thickness-normal edge-pattern-dotted flowchart-link LS-rserve-js LE-Rserve" id="L-rserve-js-Rserve-0" d="M163.683,64.255L167.85,62.638C172.017,61.022,180.35,57.788,202.381,56.171C224.411,54.554,260.139,54.554,284.253,54.554C308.367,54.554,320.867,54.554,327.117,54.554L333.367,54.554"></path></g><g class="edgeLabels"><g transform="translate(295.8666687011719, 127.77084350585938)" class="edgeLabel"><g transform="translate(-82.18333435058594, -26.60833740234375)" class="label"><foreignObject height="53.2166748046875" width="164.36666870117188"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">WebSocket</span></div></foreignObject></g></g><g transform="translate(250.2669, 54.55417)" class="edgeLabel"><g transform="translate(-60.07500457763672, -26.60833740234375)" class="label"><foreignObject height="53.2166748046875" width="120.15000915527344"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">Connect</span></div></foreignObject></g></g></g><g class="nodes"><g transform="translate(94.34166717529297, 91.16250610351562)" id="flowchart-rserve-js-1" class="node default flowchart-label"><rect height="68.2166748046875" width="138.68333435058594" y="-34.10833740234375" x="-69.34166717529297" ry="0" rx="0" style="" class="basic label-container"></rect><g transform="translate(-61.84166717529297, -26.60833740234375)" style="" class="label"><rect></rect><foreignObject height="53.2166748046875" width="123.68333435058594"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">rserve-js</span></div></foreignObject></g></g><g transform="translate(447.1916732788086, 91.16250610351562)" id="flowchart-R-0" class="node default default flowchart-label"><rect height="68.2166748046875" width="38.28334045410156" y="-34.10833740234375" x="-19.14167022705078" ry="0" rx="0" style="" class="basic label-container"></rect><g transform="translate(-11.641670227050781, -26.60833740234375)" style="" class="label"><rect></rect><foreignObject height="53.2166748046875" width="23.283340454101562"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">R</span></div></foreignObject></g></g></g></g></g></svg>
+					</div>
+
+					<ul class="!mt-12">
+						<li>
+							<code>&lt;Rserve ... /&gt;</code> does the initial connection
+						</li>
+						<li>
+							<code>useRserve()</code> gets access to R over WebSocket
+						</li>
+					</ul>
+				</section>
+
+				<section data-auto-animate>
+					<h3 class="!text-blue-500">What can R do?</h3>
+
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="|2-3|2,13|5-11">
+						const MyComponent = () =&gt; &#123;
+							const &#123; R &#125; = useRserve();
+							if (!R) return &lt;&gt;Connecting ...&lt;/&gt;;
+
+							R.ocap((err, funs) =&gt; &#123;
+								if (err) return;
+								if (!funs) return;
+
+								console.log(funs);
+							&#125;);
+							console.log("Ready!")
+
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+					</code></pre>
+				</section>
+
+				<section>
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="|2|4-11|13|2,5|7-10|">
+						upload_data &lt;- function(x) &#123;
+							user_data &lt;- read_data_from_js(x)
+
+							calculate_risks &lt;- function(conf) &#123;
+								x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
+
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+
+				<section data-auto-animate>
+					<h3 class="!text-blue-500">What about TYPES?</h3>
+
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="|3,13|3,14|">
+						const MyComponent = () =&gt; &#123;
+							// ...
+							R.ocap((err: TError, funs: TFuns) =&gt; &#123;
+								if (err) return;
+								if (!funs) return;
+
+								funs. // autocomplete!
+							&#125;);
+
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+
+						type TError = string | null;
+						type TFuns = ???;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<h3 class="!text-blue-500">What about TYPES?</h3>
+
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						const MyComponent = () =&gt; &#123;
+							// ...
+
+							R.ocap((err: TError, funs: TFuns) =&gt; &#123;
+								if (err) return;
+								if (!funs) return;
+
+								funs.upload_data // no error!
+								funs.calculate_risks // error!
+							&#125;);
+
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+
+						type TError = string | null;
+						type TFuns = ???;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<h3 class="!text-blue-500">What about TYPES?</h3>
+
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						const MyComponent = () =&gt; &#123;
+							// ...
+
+							R.ocap((err: TError, funs: TFuns) =&gt; &#123;
+								if (err) return;
+
+								funs.upload_data // error: funs may be undefined!
+								funs.calculate_risks // error!
+							&#125;);
+
+							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
+						&#125;
+
+						type TError = string | null;
+						type TFuns = ???;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						type TFuns = ???;
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
+						upload_data &lt;- function(x) &#123;
+							calculate_risks &lt;- function(conf) &#123;
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						type TFuns = &#123;
+							upload_data: (???) => ???;
+						};
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
+						upload_data &lt;- function(x) &#123;
+							calculate_risks &lt;- function(conf) &#123;
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						type TFuns = &#123;
+							upload_data: (
+								x: ???,
+								callback: ???
+							) => void;
+						};
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
+						upload_data &lt;- function(x) &#123;
+							calculate_risks &lt;- function(conf) &#123;
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						type TFuns = &#123;
+							upload_data: (
+								x: Row[],
+								callback: (err: TErr, value: TUploadResult) => void
+							) => void;
+						};
+						type TUploadResult = ???;
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="8">
+						upload_data &lt;- function(x) &#123;
+							calculate_risks &lt;- function(conf) &#123;
+								list(
+									var_contrib = list(...),
+									indiv_risk = c(...)
+								)
+							&#125;
+							list(calculate_risks = calculate_risks)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="8-11">
+						type TFuns = &#123;
+							upload_data: (
+								x: Row[],
+								callback: (err: TErr, value: TUploadResult) => void
+							) => void;
+						};
+						type TUploadResult = &#123;
+							calculate_risks: (
+								conf: &#123; sfrac: number; vars: string[] },
+								callback: (err: TErr, value: TRiskResult) => void,
+							) => void;
+						};
+						type TRiskResult = ???;
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
+						calculate_risks &lt;- function(conf) &#123;
+							list(
+								var_contrib = list(...),
+								indiv_risk = c(...)
+							)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="13-16">
+						type TFuns = &#123;
+							upload_data: (
+								x: Row[],
+								callback: (err: TErr, value: TUploadResult) => void
+							) => void;
+						};
+						type TUploadResult = &#123;
+							calculate_risks: (
+								conf: &#123; sfrac: number; vars: string[] },
+								callback: (err: TErr, value: TRiskResult) => void,
+							) => void;
+						};
+						type TRiskResult = &#123;
+							var_contrib: &#123; v: string; c: number }[];
+							indiv_risk: number[];
+						};
+					</code></pre>
+
+					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="2-5">
+						calculate_risks &lt;- function(conf) &#123;
+							list(
+								var_contrib = list(...),
+								indiv_risk = c(...)
+							)
+						&#125;
+					</code></pre>
+				</section>
+
+				<section data-auto-animate>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+						type TFuns = &#123;
+							upload_data: (
+								x: Row[],
+								callback: (err: TErr, value: TUploadResult) => void
+							) => void;
+						};
+						type TUploadResult = &#123;
+							calculate_risks: (
+								conf: &#123; sfrac: number; vars: string[] },
+								callback: (err: TErr, value: TRiskResult) => void,
+							) => void;
+						};
+						type TRiskResult = &#123;
+							var_contrib: &#123; v: string; c: number }[];
+							indiv_risk: number[];
+						};
+					</code></pre>
+				</section>
+
+				<section>
+					<h3 class="!text-blue-500">Uploading data</h3>
 
 					<ul>
 						<li>Connected to R</li>
@@ -195,34 +407,15 @@ import "../base.css"
 				</section>
 
 				<section data-auto-animate>
-					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="">
+					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="|3|6-11|14|">
 						const MyComponent = () =&gt; &#123;
 							const &#123; R &#125; = useRserve();
-							if (!R) return &lt;&gt;Loading ...&lt;/&gt;;
+							const [ uploadData, setUploadData ] = useState();
+							if (!R) return &lt;&gt;Connecting ...&lt;/&gt;;
 
 							R.ocap((err, funs) =&gt; &#123;
 								if (err) return;
-								if (!funs.upload_data) return;
-
-								console.log(funs.upload_data);
-							&#125;);
-							console.log("Ready!")
-
-							return &lt;&gt;Data-driven stuff!&lt;/&gt;;
-						&#125;
-					</code></pre>
-				</section>
-
-				<section data-auto-animate>
-					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="|3|3,13|3,10|3,14">
-						const MyComponent = () =&gt; &#123;
-							const &#123; R &#125; = useRserve();
-							const &#123; uploadData, setUploadData &#125; = useState();
-							if (!R) return &lt;&gt;Loading ...&lt;/&gt;;
-
-							R.ocap((err, funs) =&gt; &#123;
-								if (err) return;
-								if (!funs.upload_data) return;
+								if (!funs) return;
 
 								setUploadData(funs.upload_data);
 							&#125;);
@@ -233,138 +426,33 @@ import "../base.css"
 					</code></pre>
 				</section>
 
-				<section>
-					<h3 class="!text-blue-500">IV: Types</h3>
-
-					<ul>
-						<li>NextJS app uses TypeScript</li>
-						<li>R is not type safe</li>
-						<li>Need to write type definitions</li>
-					</ul>
-				</section>
-
-
 				<section data-auto-animate>
-					<pre data-id="code-animation" class="js"><code data-trim data-line-numbers="">
+					<h3 class="!text-blue-500">Types!</h3>
+					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
 						const MyComponent = () =&gt; &#123;
-							const &#123; uploadData, setUploadData &#125; =
-								useState();
+							const &#123; R &#125; = useRserve();
+							const [ uploadData, setUploadData ] =
+								useState&lt;TFuns.upload_data>();
 
-							R.ocap((err, funs) =&gt; &#123;
+							if (!R) return &lt;&gt;Connecting ...&lt;/&gt;;
+
+							R.ocap((err: TErr, funs: TFuns) =&gt; &#123;
 								if (err) return;
-								if (!funs.upload_data) return;
+								if (!funs) return;
 
 								setUploadData(funs.upload_data);
 							&#125;);
 						&#125;
 					</code></pre>
-				</section>
-
-				<section data-auto-animate>
-					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="|3,5,9">
-						const MyComponent = () =&gt; &#123;
-							const &#123; uploadData, setUploadData &#125; =
-								useState&lt;UploadData&gt;();
-
-							R.ocap((err: string | null, funs: Funs) =&gt; &#123;
-								if (err) return;
-								if (!funs.upload_data) return;
-
-								setUploadData(funs.upload_data);
-							&#125;);
-						&#125;;
-					</code></pre>
-				</section>
-
-				<section>
-					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="|2|5-11|5,11|6-10|6|7-10">
-						type Funs = &#123;
-							upload_data?: UploadData,
-						&#125;;
-
-						type UploadData = (
-							rows: Row[] | undefined,
-							callback: (
-								err: string | undefined,
-								value: DisRiskFuns | undefined,
-							) =&gt; void,
-						) =&gt; void;
-					</code></pre>
-				</section>
-
-				<section>
-					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
-						export type DisRiskFuns = &#123;
-							calculate_risks?: (
-								args: &#123; sfrac: number; vars: string[] },
-								callback: (err: any, value: DisRiskResult) => void,
-							) => void;
-						};
-					</code></pre>
-
-					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="">
-						calculate_risks &lt;- function(conf) &#123;
-							x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
-							# etc ...
-							list(
-								var_contrib = list(...),
-								indiv_risk = c(...)
-							)
-						&#125;
-					</code></pre>
-				</section>
-
-
-				<section>
-					<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
-						export type DisRiskResult = &#123;
-							var_contrib: &#123; v: string; c: number }[];
-							indiv_risk: number[];
-						};
-					</code></pre>
-
-					<pre data-id="code-animation" class="r"><code data-trim data-line-numbers="4-7">
-						calculate_risks &lt;- function(conf) &#123;
-							x &lt;- sdcMicro::createSdcObj(user_data, conf$vars)
-							# etc ...
-							list(
-								var_contrib = list(...),
-								indiv_risk = c(...)
-							)
-						&#125;
-					</code></pre>
-				</section>
-
-				<section>
-					<h3 class="!text-blue-500">Data lifecycle</h3>
-
-					<ul>
-						<li>Rserve creates a WebSocket connection</li>
-						<li>Each user has unique R process on server</li>
-						<li>Delabelled data uploaded to R environment</li>
-						<li>When WS closes, R session killed - data released</li>
-					</ul>
-				</section>
-
-				<section>
-					<h3 class="!text-blue-500">Why?</h3>
-
-					<ul>
-						<li>Data scientist writes complex R functions</li>
-						<li>Web developer writes ReactJS application</li>
-						<li>Types ensure runtime consistency</li>
-						<li>Improved development experience (autocomplete, errors, etc)</li>
-					</ul>
 				</section>
 
 				<section>
 					<h3 class="!text-blue-500">Where next?</h3>
 
 					<ul>
-						<li>Automating callbacks to Promises</li>
+						<li>Converting from callbacks to Promises</li>
 						<li>Typesafe R functions, automated type definitions</li>
 						<li>General purpose packages/tools for data-driven web apps (blog post, visualizer, ...)</li>
-						<li>Alternative to Shiny</li>
 					</ul>
 				</section>
 
