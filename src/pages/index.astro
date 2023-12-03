@@ -467,13 +467,49 @@ type TRiskResult = &#123;
 				</section>
 
 				<section>
-					<h3 class="!text-blue-500">Where next?</h3>
+					<section>
 
-					<ul>
-						<li>Converting from callbacks to Promises</li>
-						<li>Typesafe R functions, automated type definitions</li>
-						<li>General purpose packages/tools for data-driven web apps (blog post, visualizer, ...)</li>
-					</ul>
+						<h3 class="!text-blue-500">Where next?</h3>
+
+						<ul>
+							<li>Converting from callbacks to Promises</li>
+							<li>Automate type definitions from R functions</li>
+							<li>General purpose packages/tools<br/>
+								(web apps, blog posts, visualizers, ...)</li>
+						</ul>
+					</section>
+
+					<section>
+						<h4 class="!text-blue-400">Callbacks vs Promises vs React Hooks</h4>
+
+						<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+							// callback
+							const &#123; R &#125; = useRserve();
+							const [ uploadData, setUploadData ] =
+								useState&lt;TUploadData>();
+							if (!R) ...
+							R.ocap((err: TErr, funs: TFuns) =&gt; &#123;
+								if (err) return;
+								if (!funs) return;
+								setUploadData(funs.upload_data);
+							&#125;);
+
+							// promises
+							const &#123; upload_data } = await R.ocap();
+							const &#123; calculate_risks } = await upload_data(...);
+						</code></pre>
+					</section>
+
+					<section>
+						<h4 class="!text-blue-400">Callbacks vs Promises vs React Hooks</h4>
+
+						<pre data-id="code-animation" class="ts"><code data-trim data-line-numbers="">
+							// hooks
+							const &#123; funs: &#123; upload_data }, status } = useRserve();
+							// ...
+							const &#123; calculate_risks, status } = upload_data(...);
+						</code></pre>
+					</section>
 				</section>
 
 				<section class="flex flex-col">
@@ -484,8 +520,14 @@ type TRiskResult = &#123;
 						<span class="!text-red-500">NZSA 2023, Christchurch</span>
 					</h5>
 					<div class="flex gap-12 justify-center">
-						<img src="/nzsa-2023/trr.png" class="invert h-16" />
-						<img src="/nzsa-2023/ial.png" class="h-16" />
+						<div class="flex items-center gap-2">
+							<img src="/nzsa-2023/github.png" class="h-10" />
+							tmelliott
+						</div>
+						<div class="flex items-center gap-2">
+							<img src="/nzsa-2023/twitter.png" class="h-14" />
+							tomelliottnz
+						</div>
 					</div>
 				</section>
 
